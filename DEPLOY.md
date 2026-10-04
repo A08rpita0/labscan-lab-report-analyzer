@@ -11,9 +11,10 @@ work. **Docker is not required** for any of the options below.
   with no shared state.
 - **No Node.js at deploy time.** The interface is compiled into `web/` and committed. The
   only build step is `pip install -r requirements.txt`.
-- **Python 3.11.** `render.yaml` pins 3.11.9; `.python-version` and `runtime.txt` state the
-  same version for hosts and tools that read them. Vercel does not offer 3.11 and uses its
-  default, 3.12; the full test suite also passes on 3.12 and 3.13.
+- **Python.** `render.yaml` pins 3.11.9 for Render (its `PYTHON_VERSION` variable takes
+  precedence over `.python-version`), and the Dockerfile uses 3.11. `.python-version` says 3.12
+  because Vercel offers 3.12–3.14 and its build fails on a version it does not have. The
+  full test suite passes on 3.11, 3.12 and 3.13.
 
 ---
 
