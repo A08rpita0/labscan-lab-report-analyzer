@@ -67,6 +67,8 @@ rather than showing an empty page.
 
 ## Option B — Vercel (uses `vercel.json`)
 
+Live deployment: **https://labscan-two.vercel.app/**
+
 The whole application runs as **one Vercel Function**: Vercel detects the FastAPI `app` in
 `app.py`, installs `requirements.txt`, and the app serves the API (`/api/*`) and the committed
 interface in `web/` exactly as it does on Render. The interface calls the API on its own
