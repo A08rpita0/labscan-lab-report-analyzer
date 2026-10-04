@@ -1,8 +1,9 @@
 # Deployment
 
-This is a **Python FastAPI application**. One uvicorn process tree serves both the API and
-the web interface, so it needs a host that runs Python — a static host (GitHub Pages,
-Netlify, S3) will not work. **Docker is not required** for any of the options below.
+This is a **Python FastAPI application**. One process serves both the API and the web
+interface, so it needs a host that runs Python: a uvicorn server (Render, Railway, your own
+machine) or Vercel's Python functions. A static host (GitHub Pages, Netlify, S3) will not
+work. **Docker is not required** for any of the options below.
 
 - **No database, nothing written to disk.** Uploads are held in memory (the multipart spool
   threshold is raised above the upload limit, so not even a temporary file is written),
@@ -11,7 +12,8 @@ Netlify, S3) will not work. **Docker is not required** for any of the options be
 - **No Node.js at deploy time.** The interface is compiled into `web/` and committed. The
   only build step is `pip install -r requirements.txt`.
 - **Python 3.11.** `render.yaml` pins 3.11.9; `.python-version` and `runtime.txt` state the
-  same version for hosts and tools that read them.
+  same version for hosts and tools that read them. Vercel does not offer 3.11 and uses its
+  default, 3.12; the full test suite also passes on 3.12 and 3.13.
 
 ---
 
@@ -26,7 +28,7 @@ Netlify, S3) will not work. **Docker is not required** for any of the options be
 
    ```bash
    pip install -r requirements-dev.txt
-   python -m pytest -q          # 324 tests
+   python -m pytest -q          # 327 tests
    python tools/validate.py     # all 7 suites; exits non-zero on failure
    ```
 
@@ -38,7 +40,7 @@ Netlify, S3) will not work. **Docker is not required** for any of the options be
 
 ---
 
-## Option A — Render (recommended, uses `render.yaml`)
+## Option A — Render (uses `render.yaml`)
 
 1. Push the repository to GitHub.
 2. Render dashboard → **New → Blueprint** → select the repository → **Apply**.
@@ -62,7 +64,47 @@ The free plan sleeps after ~15 minutes idle; the first request afterwards takes 
 requests and, if the service is still not answering, says so and offers **Try again**
 rather than showing an empty page.
 
-## Option B — Railway or another Procfile-based host
+## Option B — Vercel (uses `vercel.json`)
+
+The whole application runs as **one Vercel Function**: Vercel detects the FastAPI `app` in
+`app.py`, installs `requirements.txt`, and the app serves the API (`/api/*`) and the committed
+interface in `web/` exactly as it does on Render. The interface calls the API on its own
+origin, so there is no API URL to configure and no CORS. `vercel.json` only pins the FastAPI
+framework preset, so Vercel does not mistake `frontend/` for the app.
+
+1. Push the repository to GitHub.
+2. Vercel dashboard → **Add New… → Project** → import the repository.
+3. Check the settings Vercel shows (all come from the repository; change nothing):
+
+   | Setting | Value |
+   |---|---|
+   | Framework Preset | FastAPI |
+   | Root Directory | `./` (repository root) |
+   | Build / Output / Install commands | defaults (dependencies come from `requirements.txt`; no Node.js build, `web/` is committed) |
+
+4. **Environment Variables:** none are required. Recommended: `DRE_MAX_UPLOAD_MB` = `4`
+   (see the upload limit below).
+5. **Deploy**, then open `https://<your-project>.vercel.app/api/health`. It should report
+   `"status": "ok"` and `"max_upload_mb": 4`.
+
+**Vercel-specific behaviour**
+- **Upload limit 4 MB.** Vercel Functions reject request bodies over 4.5 MB before they reach
+  the app. When the `VERCEL` system variable is present (it is unless system environment
+  variables are disabled for the project), the app defaults to a 4 MB limit; the interface
+  shows that limit and refuses larger files before uploading. Setting
+  `DRE_MAX_UPLOAD_MB=4` makes this explicit. Larger reports: use Render or another host.
+- **Python 3.12** at runtime (see above).
+- **Static files are served by the function**, not Vercel's CDN, because the app's
+  middleware (security headers, upload limit) applies to every response. This keeps the
+  security headers identical to Render.
+- **Cold starts.** After a period without traffic, the first request also loads the
+  configuration and the PDF library (about 0.3–0.5 s measured locally).
+- **Nothing to persist.** No writable directory, database or background job is needed.
+- **Local emulation:** `vercel dev` on Windows ran every route correctly one request at a time,
+  but its local Python runner crashed under bursts of parallel requests (plain uvicorn with the
+  same Python 3.12 environment did not). Use `uvicorn` for local work; see the README.
+
+## Option C — Railway or another Procfile-based host
 
 Connect the repository. The host detects Python from `requirements.txt` and runs the
 `Procfile`:
@@ -77,7 +119,7 @@ Set the health check path to `/api/health` if the platform asks for one.
 flag uvicorn only trusts forwarding headers from 127.0.0.1, so behind the platform's proxy
 it would see the proxy's address and plain HTTP instead of the client and HTTPS.
 
-## Option C — your own Linux server (systemd + reverse proxy)
+## Option D — your own Linux server (systemd + reverse proxy)
 
 ```bash
 sudo mkdir -p /srv/labscan && sudo chown "$USER" /srv/labscan
@@ -120,7 +162,7 @@ analytics.example.com {
 
 Here the proxy is on the same machine, so `--forwarded-allow-ips` can name it exactly.
 
-## Option D — a laptop, for a demo
+## Option E — a laptop, for a demo
 
 Follow **Local setup** and **Run the backend** in the [README](README.md): a virtualenv,
 `pip install -r requirements.txt`, then `python -m uvicorn app:app --port 8000`. This works
@@ -134,7 +176,7 @@ the same on Windows, macOS and Linux.
 |---|---|---|
 | `PORT` | `8000` | Port to bind (set by the platform on Render/Railway) |
 | `WEB_CONCURRENCY` | `2` (`1` on Render free) | uvicorn worker processes |
-| `DRE_MAX_UPLOAD_MB` | `20` | Upload size limit, enforced before parsing |
+| `DRE_MAX_UPLOAD_MB` | `20` (`4` on Vercel) | Upload size limit, enforced before parsing |
 | `DRE_ANALYSIS_TIMEOUT_S` | `60` | Per-analysis time limit; returns 504 when exceeded |
 | `DRE_LOG_LEVEL` | `INFO` | Level for the `dre` logger |
 | `DRE_ENABLE_OCR` | unset | Enables optional OCR (needs extra packages; see `requirements.txt`) |

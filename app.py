@@ -50,7 +50,10 @@ ROOT = Path(__file__).resolve().parent
 WEB = ROOT / "web"                    # the built frontend (frontend/ -> npm run build)
 SAMPLES = ROOT / "samples"
 
-MAX_BYTES = int(float(os.environ.get("DRE_MAX_UPLOAD_MB", "20")) * 1024 * 1024)
+# Vercel Functions refuse request bodies over 4.5 MB before they reach the app, so the
+# default there is 4 MB: the interface then states the real limit and checks it up front.
+_DEFAULT_UPLOAD_MB = "4" if os.environ.get("VERCEL") else "20"
+MAX_BYTES = int(float(os.environ.get("DRE_MAX_UPLOAD_MB", _DEFAULT_UPLOAD_MB)) * 1024 * 1024)
 ANALYSIS_TIMEOUT_S = float(os.environ.get("DRE_ANALYSIS_TIMEOUT_S", "60"))
 ALLOWED_SUFFIXES = {".json", ".pdf", ".csv", ".tsv", ".txt"}
 SAMPLE_MEDIA_TYPES = {".json": "application/json", ".pdf": "application/pdf",

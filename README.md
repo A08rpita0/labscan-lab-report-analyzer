@@ -13,7 +13,7 @@
 ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9_strict-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
-![Tests](https://img.shields.io/badge/pytest-324_passed-0A9EDC?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/pytest-327_passed-0A9EDC?logo=pytest&logoColor=white)
 
 </div>
 
@@ -144,7 +144,8 @@ labscan-lab-report-analyzer/
 ├── tools/              validation and audit scripts
 ├── docs/               architecture notes and screenshots
 ├── requirements.txt    runtime dependencies (requirements-dev.txt for tests)
-└── DEPLOY.md           deployment guide (Render, Procfile hosts, own server)
+├── vercel.json, render.yaml, Procfile   deployment configuration
+└── DEPLOY.md           deployment guide (Vercel, Render, Procfile hosts, own server)
 ```
 
 ---
@@ -174,7 +175,7 @@ are read at start-up:
 | Variable | Default | Purpose |
 |---|---|---|
 | `PORT` | `8000` | port when deployed (set by Render / Railway) |
-| `DRE_MAX_UPLOAD_MB` | `20` | maximum upload size |
+| `DRE_MAX_UPLOAD_MB` | `20` (`4` on Vercel) | maximum upload size |
 | `DRE_ANALYSIS_TIMEOUT_S` | `60` | time limit per analysis |
 | `DRE_LOG_LEVEL` | `INFO` | log level |
 | `DRE_ENABLE_OCR` | unset | `1` turns on optional OCR for scanned PDFs (needs extra packages; see `requirements.txt`) |
@@ -216,7 +217,7 @@ Commit the rebuilt `web/` folder together with any interface change.
 
 ```powershell
 .\.venv\Scripts\python -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python -m pytest -q             # 324 tests
+.\.venv\Scripts\python -m pytest -q             # 327 tests
 .\.venv\Scripts\python tools\validate.py        # 7 validation suites
 cd frontend; npm test; npx tsc --noEmit         # 19 unit tests + strict type-check
 ```
@@ -292,7 +293,7 @@ repository.
   cites a clinical source (145 distinct references), and every condition link quotes the
   Disease Master sentence that justifies it.
 - **Verified:**
-  - 324 pytest tests: API contract and every error path, explainability integrity, the engine,
+  - 327 pytest tests: API contract and every error path, explainability integrity, the engine,
     extraction, edge cases.
   - 1,602 checks in the standalone engine suites.
   - 7 of 7 validation suites pass, including 9 of 9 hand-built clinical cases (two of them
@@ -311,6 +312,37 @@ repository.
 - **Performance.** On a development laptop the pipeline takes roughly 7–27 ms for the JSON
   and CSV samples and about 110 ms for the two-page PDF. Each response reports its own
   stage timings.
+
+---
+
+## Deployment
+
+**Recommended: Vercel, whole application in one project.**
+
+- **What runs where.** The FastAPI app runs as a single Vercel Function and serves both the
+  API (`/api/*`) and the built interface (`web/`), just as it does locally. A separate
+  frontend deployment or backend URL isn't needed: the interface calls the API on the same
+  origin.
+- **How to deploy.** Import the GitHub repository in Vercel and keep the detected settings:
+  Framework Preset **FastAPI** (pinned by `vercel.json`), Root Directory `./`, and default
+  build and install commands. Dependencies come from `requirements.txt`, and no Node.js build
+  runs because `web/` is committed.
+- **Environment variables.** None are required. `DRE_MAX_UPLOAD_MB=4` is recommended (see
+  below). Optional: `DRE_ANALYSIS_TIMEOUT_S`, `DRE_LOG_LEVEL`.
+- **Vercel limitations:**
+  - Uploads are limited to **4 MB**, because Vercel Functions accept at most 4.5 MB per request.
+    The interface shows that limit and checks it before uploading.
+  - Vercel runs **Python 3.12**; it doesn't offer 3.11. The test suite passes on 3.11, 3.12 and 3.13.
+  - Static files are served by the function, so the app's security headers apply to them,
+    rather than by Vercel's CDN.
+  - The first request after idle includes a short cold start.
+
+**Alternative: Render.** `render.yaml` deploys the same app as a long-running uvicorn
+service with a 20 MB upload limit. Both setups run the whole app, so no frontend-to-backend
+link is needed in either.
+
+Step-by-step instructions for Vercel, Render, Procfile hosts and your own server are in
+[`DEPLOY.md`](DEPLOY.md). Docker is optional.
 
 ---
 
@@ -343,7 +375,3 @@ repository.
 - Authentication, rate limiting and audit logging for multi-user deployment.
 - A FHIR `Observation` input adapter.
 
----
-
-Deployment options (Render, Procfile-based hosts, your own Linux server) are described in
-[`DEPLOY.md`](DEPLOY.md). Docker is optional.

@@ -35,3 +35,6 @@ desktop.ini
 
 # Real laboratory reports used for local validation (personal health data). Never committed.
 private/
+
+# Vercel CLI project link and local build output
+.vercel/

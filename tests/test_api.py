@@ -61,6 +61,22 @@ def test_health_reports_config_and_fingerprint(client):
     assert h["limits"]["accepted_formats"] == ["csv", "json", "pdf", "tsv", "txt"]
 
 
+@pytest.mark.parametrize("env, expected_mb", [
+    ({}, 20),                                           # default
+    ({"VERCEL": "1"}, 4),                               # under Vercel's 4.5 MB body limit
+    ({"VERCEL": "1", "DRE_MAX_UPLOAD_MB": "3"}, 3),     # an explicit setting always wins
+])
+def test_upload_limit_default_depends_on_platform(env, expected_mb):
+    # The limit is read once at import, so check it in a fresh interpreter.
+    import os
+    import subprocess
+    import sys
+    clean = {k: v for k, v in os.environ.items() if k not in ("VERCEL", "DRE_MAX_UPLOAD_MB")}
+    out = subprocess.run([sys.executable, "-c", "import app; print(app.MAX_BYTES)"],
+                         cwd=ROOT, env={**clean, **env}, capture_output=True, text=True, check=True)
+    assert int(out.stdout.strip().splitlines()[-1]) == expected_mb * 1024 * 1024
+
+
 def test_security_headers_on_every_response(client):
     for path in ("/api/health", "/api/samples", "/"):
         r = client.get(path)
