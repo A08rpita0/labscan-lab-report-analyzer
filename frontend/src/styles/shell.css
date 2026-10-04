@@ -1,0 +1,208 @@
+/* Application frame: top bar, main region, footer. */
+
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--ink-900);
+  color: #fff;
+  border-bottom: 1px solid #0a1220;
+}
+
+.topbar-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  height: var(--header-h);
+  padding: 0 var(--s-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: #fff;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.brand:hover {
+  color: #fff;
+}
+
+.brand-mark {
+  width: 30px;
+  height: 30px;
+  flex: none;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.brand-name {
+  font-weight: 600;
+  font-size: 0.96875rem;
+  letter-spacing: -0.005em;
+}
+
+.brand-sub {
+  font-size: var(--fs-xs);
+  color: #9fb0c6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 var(--s-3);
+  border-radius: var(--radius);
+  color: #c4d0de;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-link.is-active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-short {
+  display: none;
+}
+
+.icon-xs {
+  width: 12px;
+  height: 12px;
+}
+
+.main {
+  flex: 1;
+  outline: none;
+}
+
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.footer-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--s-5) var(--s-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-8);
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--ink-500);
+}
+
+.footer-claim strong {
+  color: var(--ink-800);
+  font-weight: 600;
+}
+
+.footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  align-items: center;
+}
+
+.footer-meta a {
+  color: var(--ink-600);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+}
+
+.footer-warn {
+  color: var(--red-800);
+  font-weight: 600;
+}
+
+.container {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--s-6);
+}
+
+@media (max-width: 760px) {
+  .topbar-inner {
+    padding: 0 var(--s-4);
+    gap: var(--s-3);
+  }
+  .brand-sub {
+    display: none;
+  }
+  .nav-link {
+    padding: 0 var(--s-2);
+    font-size: var(--fs-xs);
+  }
+  .container {
+    padding: 0 var(--s-4);
+  }
+  .footer-inner {
+    padding: var(--s-4);
+  }
+}
+
+@media (max-width: 560px) {
+  .nav-full {
+    display: none;
+  }
+  .nav-short {
+    display: inline;
+  }
+  .brand-name {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand-name {
+    font-size: var(--fs-sm);
+  }
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* The smallest phones keep the mark alone so the three nav links fit. */
+@media (max-width: 359px) {
+  .brand-text {
+    display: none;
+  }
+}

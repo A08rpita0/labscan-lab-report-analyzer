@@ -1,0 +1,371 @@
+{
+  "note": "Resolves the Disease Master's 'Related Markers/Tests' column against the parameter dictionary. That column is free prose, so three things have to be handled before coverage can be measured honestly: umbrella terms that name a panel rather than a parameter, prose fragments that are not markers at all, and markers for which no assay exists in the dictionary. tools/coverage.py uses this file; anything not covered here and not resolvable by alias is reported as a genuine gap.",
+  "umbrella_terms": {
+    "cbc": [
+      "hemoglobin",
+      "wbc_count",
+      "platelet_count",
+      "mcv",
+      "rbc_count",
+      "hematocrit"
+    ],
+    "cbc used only as a general cross-reference": [
+      "hemoglobin",
+      "wbc_count",
+      "platelet_count"
+    ],
+    "complete blood count": [
+      "hemoglobin",
+      "wbc_count",
+      "platelet_count",
+      "mcv"
+    ],
+    "rbc indices": [
+      "mcv",
+      "mch",
+      "mchc",
+      "rdw_cv"
+    ],
+    "wbc count and differential": [
+      "wbc_count",
+      "neutrophil_pct",
+      "lymphocyte_pct",
+      "eosinophil_pct",
+      "monocyte_pct",
+      "basophil_pct"
+    ],
+    "lft markers": [
+      "sgpt_alt",
+      "sgot_ast",
+      "total_bilirubin",
+      "albumin",
+      "alkaline_phosphatase"
+    ],
+    "liver function markers": [
+      "sgpt_alt",
+      "sgot_ast",
+      "total_bilirubin"
+    ],
+    "liver function markers (sgot": [
+      "sgpt_alt",
+      "sgot_ast",
+      "total_bilirubin"
+    ],
+    "urinalysis": [
+      "urine_protein",
+      "urine_blood",
+      "urine_glucose",
+      "urine_specific_gravity",
+      "urine_leukocyte_esterase",
+      "urine_nitrite",
+      "urine_pus_cells",
+      "urine_ph"
+    ],
+    "leukocytes": [
+      "urine_leukocyte_esterase"
+    ],
+    "stool analysis": [
+      "stool_occult_blood",
+      "stool_wbc",
+      "stool_ova_parasite",
+      "fecal_fat"
+    ],
+    "stool analysis (to exclude blood": [
+      "stool_occult_blood",
+      "stool_wbc"
+    ],
+    "semen analysis": [
+      "sperm_concentration",
+      "sperm_motility_total",
+      "sperm_morphology",
+      "semen_volume"
+    ],
+    "semen analysis parameters": [
+      "sperm_concentration",
+      "sperm_motility_total",
+      "semen_volume"
+    ],
+    "blood sugar": [
+      "fasting_glucose",
+      "postprandial_glucose",
+      "random_glucose"
+    ],
+    "electrolytes": [
+      "sodium",
+      "potassium",
+      "chloride",
+      "bicarbonate"
+    ],
+    "electrolytes (sodium": [
+      "sodium",
+      "potassium"
+    ],
+    "blood pressure": [
+      "systolic_bp",
+      "diastolic_bp"
+    ],
+    "inflammatory markers": [
+      "crp",
+      "esr",
+      "hs_crp",
+      "procalcitonin"
+    ],
+    "inflammatory markers if available": [
+      "crp",
+      "esr"
+    ],
+    "thyroid antibodies": [
+      "anti_tpo",
+      "anti_thyroglobulin"
+    ],
+    "tumor markers if included in panel (e.g": [
+      "psa_total",
+      "ca_125",
+      "ca_15_3",
+      "ca_19_9",
+      "afp",
+      "cea"
+    ],
+    "peripheral blood smear": [
+      "malaria_antigen"
+    ],
+    "iron studies": [
+      "serum_iron",
+      "tibc",
+      "ferritin",
+      "transferrin_saturation"
+    ]
+  },
+  "not_markers": [
+    "if included in panel)",
+    "if used for differential)",
+    "not a screening tool)",
+    "not primary screening",
+    "not diagnostic for hav itself",
+    "not diagnostic for hiv itself",
+    "diagnosis is clinical",
+    "no single confirmatory marker",
+    "inflammation)",
+    "infection",
+    "dust mite",
+    "pet dander)",
+    "tree nuts",
+    "milk",
+    "egg",
+    "shellfish",
+    "wheat)",
+    "included here as part of the same bone-metabolism marker set)"
+  ],
+  "not_markers_note": "Prose fragments left behind when the free-text marker list is split on commas, plus the allergen examples listed inside 'Specific IgE panel for common food allergens (peanut, tree nuts, milk, ...)'. The head term of each of those phrases does resolve; these are the tail. They are excluded from the coverage denominator because they are not markers.",
+  "no_assay_available": [
+    {
+      "marker": "serum tryptase",
+      "diseases": [
+        "Anaphylaxis",
+        "Drug Allergy"
+      ],
+      "reason": "No tryptase assay in the NG catalogue. The Disease Master itself notes it is only informative if drawn during or shortly after the reaction.",
+      "marker_variants": [
+        "serum tryptase",
+        "tryptase if reaction was severe"
+      ]
+    },
+    {
+      "marker": "anti-ganglioside antibodies where available",
+      "diseases": [
+        "Guillain-Barre Syndrome"
+      ],
+      "reason": "No anti-ganglioside assay in the catalogue. The Disease Master qualifies this marker with 'where available'; the CSF protein arm of the same row is implemented and is what the cluster fires on."
+    },
+    {
+      "marker": "sputum/urine analysis where relevant",
+      "diseases": [
+        "Tuberculosis"
+      ],
+      "reason": "No TB-specific assay (IGRA, AFB smear, GeneXpert) in the catalogue. Adding one would make Tuberculosis directly mappable."
+    }
+  ],
+  "reported_only_parameters": [
+    {
+      "id": "basophil_pct",
+      "reason": "Basophilia is rare and non-specific; its main association is with myeloproliferative disease, which the Disease Master does not carry a row for. Extracted, graded and shown, but not used to drive any cluster."
+    },
+    {
+      "id": "urine_ph",
+      "reason": "Clinically useful mainly for stone type and renal tubular acidosis, neither of which is a Disease Master row. Extracted and shown."
+    },
+    {
+      "id": "blood_group_abo",
+      "reason": "Carries no risk meaning on its own. Recorded and shown alongside Rh factor, which is the component with a Disease Master mapping."
+    },
+    {
+      "id": "urine_bilirubin",
+      "reason": "Added so the urine dipstick 'Bilirubin' resolves to its own parameter instead of colliding with SERUM Total Bilirubin, which it was overwriting. No Disease Master row names urine bilirubin as a marker, so it is extracted and shown but drives no cluster."
+    },
+    {
+      "id": "absolute_neutrophil_count",
+      "reason": "Absolute Neutrophil Count is reported by most CBC panels and was being dropped as unmapped, so a genuinely abnormal count was invisible. No Disease Master row names absolute counts as its marker - the rows use the percentage differential - so it is extracted, graded against the report's own reference interval and shown, but drives no cluster."
+    },
+    {
+      "id": "absolute_lymphocyte_count",
+      "reason": "Absolute Lymphocyte Count is reported by most CBC panels and was being dropped as unmapped, so a genuinely abnormal count was invisible. No Disease Master row names absolute counts as its marker - the rows use the percentage differential - so it is extracted, graded against the report's own reference interval and shown, but drives no cluster."
+    },
+    {
+      "id": "absolute_monocyte_count",
+      "reason": "Absolute Monocyte Count is reported by most CBC panels and was being dropped as unmapped, so a genuinely abnormal count was invisible. No Disease Master row names absolute counts as its marker - the rows use the percentage differential - so it is extracted, graded against the report's own reference interval and shown, but drives no cluster."
+    },
+    {
+      "id": "absolute_basophil_count",
+      "reason": "Absolute Basophil Count is reported by most CBC panels and was being dropped as unmapped, so a genuinely abnormal count was invisible. No Disease Master row names absolute counts as its marker - the rows use the percentage differential - so it is extracted, graded against the report's own reference interval and shown, but drives no cluster."
+    },
+    {
+      "id": "plateletcrit",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "platelet_large_cell_ratio",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "platelet_large_cell_count",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "mentzer_index",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "estimated_average_glucose",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "ast_alt_ratio",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "bun_creatinine_ratio",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urea_creatinine_ratio",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "ldl_hdl_ratio",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "hdl_ldl_ratio",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_volume",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_epithelial_cells",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_casts",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_crystals",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_bacteria",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_yeast_cells",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_amorphous_deposits",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_protozoa",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_urobilinogen",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_colour",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_transparency",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_deposit",
+      "reason": "Printed on a real laboratory report (CBC indices, calculated ratios, urine physical and microscopic examination) and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "serum_osmolality",
+      "reason": "Named in the Disease Master's SIADH row, which the engine cannot infer from bloods alone (it needs volume status). Extracted and graded against the report's interval; drives no cluster."
+    },
+    {
+      "id": "urine_osmolality",
+      "reason": "Named in the Disease Master's SIADH row, which the engine cannot infer from bloods alone (it needs volume status). Extracted and graded against the report's interval; drives no cluster."
+    },
+    {
+      "id": "urine_rbc_count",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_dysmorphic_rbc",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_trichomonas",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_caox_monohydrate_crystals",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_caox_dihydrate_crystals",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_triple_phosphate_crystals",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_uric_acid_crystals",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_hyaline_casts",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "urine_pathological_casts",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "rbc_morphology",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "wbc_morphology",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "platelet_morphology",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    },
+    {
+      "id": "transferrin",
+      "reason": "Printed on real laboratory reports and previously dropped as an unrecognised test. No Disease Master row names it as a marker, so it is extracted, graded only against the report's own interval where one is printed, and shown - it drives no cluster."
+    }
+  ],
+  "reported_only_note": "These parameters are deliberately extracted, unit-converted, graded against their reference range and displayed, but do not feed any cluster. Listing them here keeps the distinction between 'not covered' and 'covered as a reported value' explicit."
+}

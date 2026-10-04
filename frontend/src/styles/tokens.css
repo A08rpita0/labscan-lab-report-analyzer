@@ -1,0 +1,101 @@
+/* Design tokens. Every colour, space and type size in the interface comes from here.
+ *
+ * Palette logic: a navy/slate base carries the structure; one muted blue is the only
+ * accent. Amber means "worth attention", red is reserved for time-critical states,
+ * green for in-range. Evidence strength is shown in navy/blue/slate - never in
+ * red or green, because "strong evidence" is not "dangerous" and "weak" is not "safe".
+ * All text/background pairs below meet WCAG AA (4.5:1) at body size. */
+
+:root {
+  /* ink - text and structure */
+  --ink-950: #0b1524;
+  --ink-900: #0f1b2d;
+  --ink-800: #1b2a40;
+  --ink-700: #2c3b52;
+  --ink-600: #44546b;
+  --ink-500: #5d6b80;
+  --ink-400: #8693a5;
+  --ink-300: #b4bdca;
+
+  /* surfaces */
+  --canvas: #f4f6f9;
+  --surface: #ffffff;
+  --sunken: #eef1f5;
+  --line: #e1e6ed;
+  --line-strong: #cbd3de;
+
+  /* accent - muted clinical blue */
+  --blue-800: #1d4272;
+  --blue-700: #24518a;
+  --blue-600: #2e62a3;
+  --blue-500: #4a7cc0;
+  --blue-300: #9dbbe2;
+  --blue-100: #e3ecf7;
+  --blue-50: #f1f5fb;
+
+  /* semantic */
+  --amber-800: #7a4f00;
+  --amber-600: #a86d07;
+  --amber-500: #c98a1b;
+  --amber-100: #fbefd6;
+  --amber-50: #fdf8ec;
+  --red-800: #8e1f24;
+  --red-600: #b32d33;
+  --red-100: #fae1e2;
+  --red-50: #fdf2f2;
+  --green-800: #17573a;
+  --green-600: #23784f;
+  --green-100: #dff0e6;
+  --green-50: #f1f8f4;
+  --teal-700: #1c5f63;
+  --teal-100: #ddeeee;
+
+  /* evidence levels: strength of the configured match, not severity */
+  --ev-high: #0f1b2d;
+  --ev-moderate: #2e62a3;
+  --ev-low: #7d8ca1;
+  --ev-limited: #b4bdca;
+
+  /* graph node families */
+  --node-parameter: #44546b;
+  --node-cohort: #2e62a3;
+  --node-condition: #0f1b2d;
+  --node-action: #1c5f63;
+
+  /* type */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --fs-2xs: 0.6875rem;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-2xl: 2.125rem;
+
+  /* space (4px grid) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  --shadow-1: 0 1px 2px rgba(15, 27, 45, 0.06), 0 1px 1px rgba(15, 27, 45, 0.03);
+  --shadow-2: 0 4px 14px rgba(15, 27, 45, 0.08), 0 1px 3px rgba(15, 27, 45, 0.06);
+  --shadow-3: 0 12px 36px rgba(15, 27, 45, 0.14), 0 2px 6px rgba(15, 27, 45, 0.08);
+
+  --focus: 0 0 0 3px rgba(46, 98, 163, 0.35);
+  --header-h: 56px;
+  --content-max: 1200px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

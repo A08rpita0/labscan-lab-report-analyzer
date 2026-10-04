@@ -1,0 +1,57 @@
+# Describes the INPUT of each synthetic sample: its format, its structure and which
+# pipeline behaviour it exercises. It never states an expected finding - every result
+# shown for a sample comes from running it through the engine.
+#
+# Each `exercises` tag is asserted by tests/test_api.py, so a tag cannot outlive the
+# behaviour it names. All patients are fabricated.
+#
+# TOML rather than JSON so tools that run every *.json in this folder through the
+# engine (tools/consistency.py) never mistake the manifest for a report.
+
+[[sample]]
+file = "p1_metabolic.json"
+title = "Cardiometabolic panel"
+description = "Nested JSON with a patient block and laboratory panels for lipids, glycaemic control, kidney and liver function, plus BMI and blood pressure."
+exercises = ["nested_json", "cross_profile_patterns", "derived_values"]
+
+[[sample]]
+file = "p2_anaemia_thyroid.json"
+title = "Haematology and thyroid"
+description = "Flat JSON keyed by test name, each value an object with an optional reference range. Vitamin D is reported in SI units (nmol/L)."
+exercises = ["flat_json", "unit_conversion"]
+
+[[sample]]
+file = "p3_febrile.json"
+title = "Febrile illness screen"
+description = "A JSON test array mixing qualitative serology (Positive, Reactive, Non-Reactive, Negative) with blood counts and liver enzymes."
+exercises = ["qualitative_results", "exclusion_gates", "link_gating"]
+
+[[sample]]
+file = "p4_sparse.json"
+title = "Sparse basic panel"
+description = "Ten results written as 'value unit' strings, with no demographics at all - the patient's sex is not stated."
+exercises = ["sparse_input", "missing_demographics"]
+
+[[sample]]
+file = "p5_healthy.json"
+title = "In-range panel"
+description = "A broad panel in which every recognised result sits inside its reference interval - a negative control for the whole pipeline."
+exercises = ["negative_control"]
+
+[[sample]]
+file = "p6_messy.json"
+title = "Messy, deeply nested export"
+description = "Irregular JSON: an unrelated metadata block, results nested several levels deep, SI units (mmol/L, umol/L, 10^9/L), null and empty values, and the same test reported twice under different names."
+exercises = ["deep_nesting", "unit_conversion", "duplicate_resolution", "null_values"]
+
+[[sample]]
+file = "p7_report.pdf"
+title = "Two-page PDF laboratory report"
+description = "A text-layer PDF with a header block and results printed as tables across several panels: blood count, iron studies, liver, kidney, diabetes and lipids."
+exercises = ["pdf_extraction", "multi_profile"]
+
+[[sample]]
+file = "p8_thyroid.csv"
+title = "CSV export with header block"
+description = "A CSV whose first rows carry patient details, followed by a results table with unit, reference range and the laboratory's own flag."
+exercises = ["csv_extraction", "lab_flags"]

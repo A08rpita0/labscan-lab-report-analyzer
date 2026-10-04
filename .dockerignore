@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.git/
+.gitignore
+.DS_Store
+Thumbs.db
+*.log
+
+# Dev-only: not needed to serve the app
+tests/
+.pytest_cache/
+requirements-dev.txt
+pytest.ini
+
+# Frontend SOURCE. The compiled interface is in web/ (built by `npm run build` in
+# frontend/ and committed), so the image needs no Node toolchain.
+frontend/
+
+# Keep tools/ — validate.py runs in the image build and is useful for debugging
+
+# Real patient reports and validation data. Never copied into an image.
+private/

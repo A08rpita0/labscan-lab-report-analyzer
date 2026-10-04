@@ -1,0 +1,25 @@
+# Runtime — pinned to the versions this build was developed and validated against.
+# Loosen deliberately, not by accident: the engine's behaviour is covered by
+# tools/validate.py, so run it after any upgrade.
+
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+python-multipart==0.0.32     # multipart form uploads
+pdfplumber==0.11.10          # PDF text and table extraction
+openpyxl==3.1.5              # rebuilding config/disease_master.json from the workbook
+
+# Transitive, pinned so a rebuild is reproducible.
+pydantic==2.13.5
+starlette==1.6.0
+pillow==12.3.0
+pdfminer.six==20260107
+
+# Optional, development only - not needed to run the site or the tests:
+#   reportlab>=4.0   regenerate samples/ and tests/fixtures/pdf/ (tools/make_pdf_fixtures.py)
+#   pypdf>=4.0       only for the multi-part fixture tests/fixtures/pdf/mixed.pdf
+#
+# Optional, NOT installed by default - OCR for scanned PDFs (engine/ocr.py):
+#   rapidocr_onnxruntime, pypdfium2   ~270 MB, beyond a serverless function's size limit.
+#   Also requires DRE_ENABLE_OCR=1. Off by default: in validation on a real photographed
+#   report it read a troponin slip's reference line as the result. Without it a scanned
+#   page is reported as unreadable rather than guessed.

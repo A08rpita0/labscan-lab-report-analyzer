@@ -1,0 +1,269 @@
+/* Print / Save as PDF: a report, not a screenshot of an app.
+ * Interactive chrome is dropped, collapsed content is forced open by the page before
+ * printing (see Results), and colour is kept only where it carries meaning. */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm 16mm;
+  }
+
+  :root {
+    --canvas: #fff;
+  }
+
+  body {
+    font-size: 10pt;
+    background: #fff;
+    color: #000;
+  }
+
+  .topbar,
+  .footer,
+  .skip-link,
+  .section-rail,
+  .no-print,
+  .rh-actions,
+  .eg-toolbar,
+  .eg-inspector,
+  .px-controls,
+  .px-count,
+  .plan-filter,
+  .rerun,
+  .raw,
+  .btn,
+  .linkish.step-graph,
+  #graph,
+  .rm-detail,
+  .rulemap-legend {
+    display: none !important;
+  }
+
+  .results-layout {
+    display: block;
+    padding: 0;
+  }
+
+  .container {
+    padding: 0;
+    max-width: none;
+  }
+
+  .report-header {
+    border-bottom: 2px solid #000;
+    padding: 0 0 6mm;
+  }
+
+  .report-header::before {
+    content: "LabScan: understand your lab report, spot what needs attention. Not a diagnosis.";
+    display: block;
+    font-size: 8.5pt;
+    color: #444;
+    margin-bottom: 3mm;
+  }
+
+  .rh-meta {
+    grid-template-columns: repeat(4, auto);
+  }
+
+  .results-main {
+    display: block;
+  }
+
+  .rsection {
+    margin-top: 8mm;
+    break-inside: auto;
+  }
+
+  .rsection-head {
+    break-after: avoid;
+  }
+
+  /* Keep only SMALL units whole. An expanded finding is longer than a page; asking for
+     it to stay whole made Chrome push every card to a fresh page, leaving half-empty
+     and even blank pages. */
+  .finding,
+  .ref-entry,
+  .cov-card,
+  .audit-card {
+    box-shadow: none !important;
+  }
+
+  .step,
+  .labf,
+  .mrow,
+  .tr-row,
+  .contrib-list li,
+  .buildup,
+  .sig-chip,
+  .ov-card,
+  .attn-group-head,
+  .urgent-item,
+  .table tr {
+    break-inside: avoid;
+  }
+
+  /* a heading never ends a page alone */
+  h2,
+  h3,
+  h4,
+  .rsection-head,
+  .fb-h,
+  .sub-h,
+  .trace-head,
+  .plan-group-head,
+  .finding-head {
+    break-after: avoid;
+  }
+
+  .finding-head,
+  .ref-head {
+    padding: 3mm;
+  }
+
+  /* hidden, but its grid cell is kept: removing the element shifts the header's other
+     children into the wrong tracks and pushes the evidence column off the page */
+  .finding-chev {
+    visibility: hidden;
+  }
+
+  /* on paper an ellipsis loses information; let summary lines wrap */
+  .finding-why,
+  .eg-node-label,
+  .rh-file,
+  .pb-name,
+  .rm-cat {
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .urgent-block,
+  .callout,
+  .ov-grid,
+  .funnel,
+  .rh-meta {
+    break-inside: avoid;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  /* Summary print: the plain view only. Full report: the plain view plus every detail. */
+  html[data-print-mode="summary"] .details-panel {
+    display: none !important;
+  }
+
+  .extra {
+    display: block !important;
+  }
+
+  .show-more,
+  .mcard-actions,
+  .details-toggle,
+  .details-tabs,
+  .details-exports,
+  .tally-help {
+    display: none !important;
+  }
+
+  .details-body {
+    border: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .tally-item {
+    padding: 3mm;
+  }
+
+  .rrow,
+  .mcard,
+  .nstep,
+  .nlist li,
+  .today {
+    break-inside: avoid;
+  }
+
+  .simple-sec {
+    padding-top: 6mm;
+  }
+
+  .simple-h,
+  .ngroup-title {
+    break-after: avoid;
+  }
+
+  .ov-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* grids fragment poorly across pages; on paper these read top to bottom */
+  .cov-grid,
+  .audit-grid,
+  .attn-groups,
+  .fb-grid {
+    display: block;
+  }
+
+  .cov-grid > * + *,
+  .audit-grid > * + *,
+  .attn-groups > * + *,
+  .fb-grid > * + * {
+    margin-top: 4mm;
+  }
+
+  /* Containers that run across pages. Chrome fragments a grid container badly - a
+     continued item can paint over the content that follows it - so on paper they
+     stack as plain blocks, with margins in place of the grid gaps. */
+  .findings,
+  .finding-list,
+  .finding-body,
+  .fb-foot,
+  .tr-rows {
+    display: block;
+  }
+
+  .findings > * + *,
+  .finding-list > * + *,
+  .finding-body > * + *,
+  .fb-foot > * + * {
+    margin-top: 3mm;
+  }
+
+  .tr-rows > * + * {
+    margin-top: 1.5mm;
+  }
+
+  .funnel {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .eg-scroll,
+  .code-block,
+  .rm-list {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .disclaimer-card {
+    background: #fff;
+    color: #000;
+    border: 1.5px solid #000;
+  }
+
+  .disclaimer-card h2,
+  .disclaimer-card .muted {
+    color: #000;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
